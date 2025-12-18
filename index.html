@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Route Finder</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Campus Route Finder</h1>
+        <p>Please select the <b>Start</b> and <b>End</b> points from the map.</p>
+
+        <div id="map"></div>
+        <div class="controls">
+            <button onclick="resetPage()">Clear Selection</button>
+            <div id="route-info"> No selection yet. </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="dijkstra.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+

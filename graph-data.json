@@ -1,0 +1,14 @@
+{
+  "nodes": [
+    { "id": "A", "name": "Kampüs Girişi", "lat": 37.200, "lng": 28.350 },
+    { "id": "B", "name": "Kütüphane", "lat": 37.202, "lng": 28.352 },
+    { "id": "C", "name": "Yemekhane", "lat": 37.201, "lng": 28.355 },
+    { "id": "D", "name": "Yurtlar", "lat": 37.204, "lng": 28.358 }
+  ],
+  "edges": [
+    { "from": "A", "to": "B", "weight": 5 },
+    { "from": "A", "to": "C", "weight": 10 },
+    { "from": "B", "to": "D", "weight": 3 },
+    { "from": "C", "to": "D", "weight": 2 }
+  ]
+}
