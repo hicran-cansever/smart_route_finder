@@ -1,8 +1,8 @@
-// --- 1. Setup the Map ---
-// Focus on the specific coordinates (Mugla area)
+// --- 1. Setup Map ---
+// Focus on the coordinates
 var map = L.map('map').setView([37.202, 28.355], 16);
 
-// Add the visual layer (OpenStreetMap)
+// Add OpenStreetMap layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
@@ -10,17 +10,16 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // --- 2. Global Variables ---
 var globalNodes = [];
 var globalEdges = [];
-var selectedNodes = []; // List to keep selected start/end points
+var selectedNodes = []; // User's start and end selection
 
-// --- 3. Load Data from JSON ---
+// --- 3. Load Data ---
 fetch('graph-data.json')
     .then(response => response.json())
     .then(data => {
-        // Save data to global variables
         globalNodes = data.nodes;
         globalEdges = data.edges;
 
-        // Create markers for each node
+        // Create a marker for each node
         globalNodes.forEach(node => {
             createMarker(node);
         });
@@ -29,9 +28,8 @@ fetch('graph-data.json')
         alert("Error loading data: " + error);
     });
 
-// --- 4. Function to Create a Marker ---
+// --- 4. Create Marker Function ---
 function createMarker(node) {
-    // Create a blue circle marker
     var marker = L.circleMarker([node.lat, node.lng], {
         color: 'blue',
         fillColor: '#30a5ff',
@@ -39,76 +37,86 @@ function createMarker(node) {
         radius: 10
     }).addTo(map);
 
-    // Add a simple name label (tooltip)
     marker.bindTooltip(node.name);
 
-    
+    // Add Click Event
     marker.on('click', function() {
         handleNodeSelection(node, marker);
     });
 }
 
-// --- 5. Handle Selection Logic ---
+// --- 5. Handle User Selection ---
 function handleNodeSelection(node, marker) {
-    // If we already have 2 points, do nothing (or reset)
+    // If 2 points are already selected, warn the user
     if (selectedNodes.length >= 2) {
-        alert("You already selected 2 points! Click 'Reset' to start over.");
+        alert("Please click 'Reset Map' to start over.");
         return;
     }
 
-    // Add node to our list
     selectedNodes.push(node);
 
-    // Visual feedback: Change color to RED
+    // Change color to RED to show selection
     marker.setStyle({ color: 'red', fillColor: 'red' });
 
-    // Update the info box on the screen
+    // Update info box
     var infoBox = document.getElementById("route-info");
     if (selectedNodes.length === 1) {
-        infoBox.innerText = "Start Point: " + node.name;
+        infoBox.innerHTML = "Start Point: <b>" + node.name + "</b>";
     } else {
-        infoBox.innerText = "End Point: " + node.name;
-        // We have 2 points, let's find the path!
+        // We have 2 points, calculate the route!
         runDijkstraAlgorithm();
     }
 }
 
-// --- 6. Run Dijkstra and Draw Path ---
+// --- 6. Run Algorithm & Show Results ---
 function runDijkstraAlgorithm() {
     var startNode = selectedNodes[0];
     var endNode = selectedNodes[1];
 
-    // Check if the algorithm function exists (from dijkstra.js)
     if (typeof calculateShortestPath === "function") {
         
-        // Call the algorithm
-        var pathIds = calculateShortestPath(globalNodes, globalEdges, startNode.id, endNode.id);
+        // Get result (path + distance) from dijkstra.js
+        var result = calculateShortestPath(globalNodes, globalEdges, startNode.id, endNode.id);
 
-        if (pathIds.length > 0) {
-            // Convert IDs (e.g., "A", "B") to coordinates (e.g., [37.2, 28.3])
-            var pathCoordinates = [];
+        if (result && result.path.length > 0) {
             
-            // Loop through path IDs to find matching node objects
-            for (var i = 0; i < pathIds.length; i++) {
-                var id = pathIds[i];
-                // Find the node object with this ID
+            // A. Draw the Red Line
+            var pathCoordinates = [];
+            for (var i = 0; i < result.path.length; i++) {
+                var id = result.path[i];
                 var foundNode = globalNodes.find(n => n.id === id);
                 pathCoordinates.push([foundNode.lat, foundNode.lng]);
             }
-
-            // Draw the red line (Polyline)
             L.polyline(pathCoordinates, { color: 'red', weight: 5 }).addTo(map);
-            
-            document.getElementById("route-info").innerText = "Route found! Distance calculated.";
+
+            // B. Calculate Details
+            var distance = result.totalDistance;
+            var time = distance * 2; // Simple math: 1 unit = 2 mins
+            var stepNames = []; 
+
+            // Convert IDs (A, B) to Names (Gate, Library) for display
+            result.path.forEach(id => {
+                var n = globalNodes.find(node => node.id === id);
+                stepNames.push(n.name);
+            });
+
+            // C. Show Info on Screen (Distance, Time, Steps)
+            var infoBox = document.getElementById("route-info");
+            infoBox.innerHTML = `
+                <b>Path:</b> ${stepNames.join(" ➝ ")} <br>
+                <b>Total Distance:</b> ${distance} units <br>
+                <b>Est. Time:</b> ${time} mins
+            `;
+
         } else {
-            alert("No path found between these two points.");
+            alert("No path found between these points.");
         }
     } else {
-        alert("Error: dijkstra.js file is missing or not linked.");
+        alert("Error: dijkstra.js file is missing.");
     }
 }
 
-// Simple reload function for the Reset button
-function resetPage() {
+// Reload page function for the button
+function reloadPage() {
     location.reload();
-}55
+}
