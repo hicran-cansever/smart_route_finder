@@ -1,45 +1,44 @@
-// Main function to find the shortest path and distance
-function calculateShortestPath(graphNodes, graphEdges, startId, endId) {
+// Function to calculate shortest path and total distance
+function calculateShortestPath(nodes, edges, startId, endId) {
     
     // 1. Setup variables
-    let distances = {}; // Stores the shortest distance to each node
-    let previous = {};  // Keeps track of the path
-    let queue = [];     // List of nodes to visit
+    let distances = {}; 
+    let previous = {};  
+    let queue = [];     
 
-    // Set initial values (Infinity for all, 0 for start)
-    graphNodes.forEach(node => {
+    // Initialize values
+    nodes.forEach(node => {
         distances[node.id] = Infinity;
         previous[node.id] = null;
         queue.push(node.id);
     });
 
+    // Start point distance is 0
     distances[startId] = 0;
 
-    // 2. Main Loop: Visit nodes
+    // 2. Main Algorithm Loop
     while (queue.length > 0) {
-        // Sort queue to find the closest node
+        // Find node with smallest distance
         queue.sort((a, b) => distances[a] - distances[b]);
-        let currentNode = queue.shift(); // Remove the closest one
+        let currentNode = queue.shift(); 
 
-        // If we reached the target, stop!
-        if (currentNode === endId) break;
+        if (currentNode === endId) break; // Reached destination
 
-        // 3. Check neighbors
-        let neighbors = graphEdges.filter(edge => edge.from === currentNode);
+        // Find neighbors
+        let myEdges = edges.filter(edge => edge.from === currentNode);
         
-        neighbors.forEach(edge => {
-            let neighborNode = edge.to;
-            let newDistance = distances[currentNode] + edge.weight;
+        myEdges.forEach(edge => {
+            let neighbor = edge.to;
+            let newDist = distances[currentNode] + edge.weight;
 
-            // If a shorter path is found, update it
-            if (newDistance < distances[neighborNode]) {
-                distances[neighborNode] = newDistance;
-                previous[neighborNode] = currentNode;
+            if (newDist < distances[neighbor]) {
+                distances[neighbor] = newDist;
+                previous[neighbor] = currentNode;
             }
         });
     }
 
-    // 4. Reconstruct the path backwards
+    // 3. Reconstruct the Path
     let path = [];
     let current = endId;
     
@@ -48,10 +47,10 @@ function calculateShortestPath(graphNodes, graphEdges, startId, endId) {
         current = previous[current];
     }
 
-    // If no path found (disconnected), return null
+    // Check if path is valid
     if (path.length === 1 && path[0] !== startId) return null;
     
-    // *** RETURN BOTH PATH AND TOTAL DISTANCE ***
+    // Return both path list and total distance
     return { 
         path: path, 
         totalDistance: distances[endId] 

@@ -2,25 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Smart Route Finder</title>
+    <title>Advanced Route Planner</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="container">
-        <h1>Campus Route Finder</h1>
-        <p>Please select the <b>Start</b> and <b>End</b> points from the map.</p>
+        <h1>Pro Route Finder (A* vs Dijkstra)</h1>
+        
+        <div class="toolbar">
+            <button onclick="toggleEditMode()" id="editBtn">Enable Edit Mode</button>
+            <button onclick="clearMap()" style="background-color: #e74c3c;">Reset Map</button>
+        </div>
 
         <div id="map"></div>
-        <div class="controls">
-            <button onclick="resetPage()">Clear Selection</button>
-            <div id="route-info"> No selection yet. </div>
+
+        <div id="route-info">
+            Select <b>Start</b> and <b>End</b> points to compare algorithms.
         </div>
     </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="dijkstra.js"></script>
+    <script src="algorithms.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
-
-

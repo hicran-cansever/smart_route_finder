@@ -1,14 +1,26 @@
 {
   "nodes": [
-    { "id": "A", "name": "Kampüs Girişi", "lat": 37.200, "lng": 28.350 },
-    { "id": "B", "name": "Kütüphane", "lat": 37.202, "lng": 28.352 },
-    { "id": "C", "name": "Yemekhane", "lat": 37.201, "lng": 28.355 },
-    { "id": "D", "name": "Yurtlar", "lat": 37.204, "lng": 28.358 }
+    { "id": "A", "name": "Campus Entrance", "lat": 37.1995, "lng": 28.3490 },
+    { "id": "R1", "name": "Road 1", "lat": 37.2002, "lng": 28.3498 },
+    { "id": "R2", "name": "Road 2", "lat": 37.2008, "lng": 28.3505 },
+    { "id": "R3", "name": "Road 3", "lat": 37.2014, "lng": 28.3512 },
+    { "id": "B", "name": "Main Library", "lat": 37.2020, "lng": 28.3522 },
+    { "id": "R4", "name": "Side St 1", "lat": 37.2018, "lng": 28.3540 },
+    { "id": "R5", "name": "Side St 2", "lat": 37.2015, "lng": 28.3548 },
+    { "id": "C", "name": "Food Court", "lat": 37.2010, "lng": 28.3555 },
+    { "id": "D", "name": "Dormitory", "lat": 37.2040, "lng": 28.3580 },
+    { "id": "E", "name": "Engineering Faculty", "lat": 37.2030, "lng": 28.3560 }
   ],
   "edges": [
-    { "from": "A", "to": "B", "weight": 5 },
-    { "from": "A", "to": "C", "weight": 10 },
-    { "from": "B", "to": "D", "weight": 3 },
-    { "from": "C", "to": "D", "weight": 2 }
+    { "from": "A", "to": "R1", "weight": 2 }, { "from": "R1", "to": "A", "weight": 2 },
+    { "from": "R1", "to": "R2", "weight": 2 }, { "from": "R2", "to": "R1", "weight": 2 },
+    { "from": "R2", "to": "R3", "weight": 2 }, { "from": "R3", "to": "R2", "weight": 2 },
+    { "from": "R3", "to": "B", "weight": 3 }, { "from": "B", "to": "R3", "weight": 3 },
+    { "from": "A", "to": "R4", "weight": 10 }, { "from": "R4", "to": "A", "weight": 10 },
+    { "from": "R4", "to": "R5", "weight": 3 }, { "from": "R5", "to": "R4", "weight": 3 },
+    { "from": "R5", "to": "C", "weight": 2 }, { "from": "C", "to": "R5", "weight": 2 },
+    { "from": "B", "to": "E", "weight": 4 }, { "from": "E", "to": "B", "weight": 4 },
+    { "from": "E", "to": "D", "weight": 3 }, { "from": "D", "to": "E", "weight": 3 },
+    { "from": "C", "to": "D", "weight": 5 }, { "from": "D", "to": "C", "weight": 5 }
   ]
 }
